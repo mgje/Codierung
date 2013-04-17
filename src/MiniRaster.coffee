@@ -1,3 +1,17 @@
+#DOM Help Functions
+wout = (eid,output)->
+	e = clearAllChilds eid
+	t = document.createTextNode output
+	e.appendChild t
+	false
+
+clearAllChilds = (id)->
+	e = document.getElementById id
+	while e.hasChildNodes()
+		e.removeChild e.lastChild
+	e
+
+
 
 createCodeBlock = (k,n) ->
 	for i in [0..n]
@@ -28,11 +42,11 @@ handleronChange = (e) ->
 	id = parseInt el.parentElement.id
 	if st == "innerBox null"
 		el.className = "innerBox eins"
-		@matrix[id] = 1
+		grid.matrix[id] = 1
 	
 	if st =="innerBox eins"
 		el.className = "innerBox null"
-		@matrix[id] = 0
+		grid.matrix[id] = 0
 	false
 
 createRandomMatrix = ->
@@ -88,16 +102,13 @@ evaluateInput = (form) ->
 	for z in input.split ',' 
 		zm.push parseInt z
 	@code = zm
-	grid.decRLE()
-	grid.element.innerHTML = grid.createGrid().join ''
-	grid.defgridborder()
-	grid.updateMat()
+	@decRLE()
+	@element.innerHTML = grid.createGrid().join ''
+	@defgridborder()
+	@updateMat()
 
 outCode = ->
-	s = grid.enRLE()
-	pre = document.getElementById "codeout"
-	pre.innerHTML = s
-
+	wout "codeout",@enRLE()
 
 grid = 
 	row: 50

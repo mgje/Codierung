@@ -8,6 +8,14 @@ pre{
 	height: 500px;
 	max-height: 500px;
 }
+
+#hint{
+	height: 250px;
+}
+#codeout{
+	height: 250px;
+}
+
 .zeile {
 	clear: both;
 }
