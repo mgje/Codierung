@@ -1,3 +1,15 @@
+#DOM Help Functions
+wout = (eid,output)->
+	e = clearAllChilds eid
+	t = document.createTextNode output
+	e.appendChild t
+	false
+
+clearAllChilds = (id)->
+	e = document.getElementById id
+	while e.hasChildNodes()
+		e.removeChild e.lastChild
+	e
 
 # Rekursive update of two trees
 appendNode = (inode, onode, name) ->
@@ -24,8 +36,7 @@ appendNode = (inode, onode, name) ->
 
 #  Begin Tree
 buildTree = ->
-	e = document.getElementById "chart"
-	e.innerHTML = ""
+	e = clearAllChilds "chart"
 	tjson = []
 	appendNode @treeEncoded,tjson,"Huffman Baum     "
 	json = tjson[0]
@@ -80,16 +91,13 @@ buildTree = ->
 
 sInput = (form) ->
 	@txt = form.value
-	#wout("outtext",@txt)
-	
 	@encode()
-	#@decode()
 	false
 
 dec = ->
 	el = document.getElementById("selectCode")
-	if el.value == "ASCII Codierung"
-		@deccodeASCII()
+	if el.value == "ASCII Kodierung"
+		@decodeASCII()
 	else
 		@decodeHuffman()
 
@@ -102,31 +110,23 @@ dHuffman = ->
 	
 
 dASCII = ->
-	false
+	@dectxt = @decodeASCIIBitString @encbin
 
 enc = ->
 	el = document.getElementById("selectCode")
-	if el.value == "ASCII Codierung"
+	if el.value == "ASCII Kodierung"
 		@encodeASCII()
+		e = clearAllChilds "chart"
 	else
 		@encodeHuffman()
 
 	wout "encodeout",@encbin
 	false
 
-wout = (eid,output)->
-	e = document.getElementById eid
-	while e.hasChildNodes()
-		e.removeChild e.lastChild
-	t = document.createTextNode output
-	e.appendChild t
-	false
-
-dHuffmanBitString = (j) ->
-    a = @encbin
+dHuffmanBitString = (tbin) ->
     i = "";
     b = @huffman.root;
-    f = a.split ""
+    f = tbin.split ""
     e = f.length
     for g in [0...e]
         h = f[g]
@@ -136,6 +136,15 @@ dHuffmanBitString = (j) ->
             i += b.value;
             b = @huffman.root
     i
+
+dASCIIBitString = (tbin) ->
+	code = tbin.split(" ")
+	s= ""
+	for c in code
+		k = parseInt c,2 
+		z = String.fromCharCode k 
+		s +=z
+	s
 
 
 eHuffman = ->
@@ -180,6 +189,7 @@ huff =
 	decodeASCII: dASCII
 	decodeHuffman: dHuffman
 	decodeHuffmanBitString: dHuffmanBitString
+	decodeASCIIBitString: dASCIIBitString
 	writeOut: wout
 	genTree: buildTree
 
