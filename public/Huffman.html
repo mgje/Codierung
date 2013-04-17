@@ -12,19 +12,30 @@
     <div class="container-fluid">
     <div class="row">
     <div class="span5">
-	<h3>Huffman Codierung</h3>
+	<h3>Text Koodierung</h3>
     <form class="form-search">
     <input type="text" name="input1" class="input-xlarge  span6" type="text" value="Kenne mer nit, bruche mer nit, fott domet!" ><br>
-    <button type="submit" name="button" class="btn" ><i class="icon-chevron-right"></i> Encode </button>
+    <button type="submit" name="button" class="btn" ><i class="icon-chevron-right"></i>Kodieren </button>
     <select  class="span3" id="selectCode">
             <option>ASCII Codierung</option>
             <option>Huffman Codierung</option>
     </select>
 	</form> 
+    <!--
     <p> Text: </p>
     <pre id="outtext" class="pre-scrollable">
     </pre>
-     <p> Encoded Text: </p>
+-->
+    <p> Koodierter Text: </p>
+    <div class="control-group" >
+        <pre id="encodeout" class="pre-scrollable">
+        </pre>
+    </div>
+    <form class="form-search">
+    <button type="submit" name="button" class="btn" ><i class="icon-chevron-right"></i> Dekodieren </button>
+    </form> 
+
+    <p> Dekodierter Text: </p>
     <div class="control-group" >
         <pre id="decodeout" class="pre-scrollable">
         </pre>

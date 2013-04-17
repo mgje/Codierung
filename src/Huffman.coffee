@@ -9,7 +9,6 @@ appendNode = (inode, onode, name) ->
 		i = 0
 		for child in inode
 			appendNode child,entry.children,i.toString()
-			console.log i
 			i = i + 1
 		false
 	else
@@ -78,11 +77,31 @@ buildTree = ->
 
 #  End Tree
 
+
 sInput = (form) ->
 	@txt = form.value
-	e = document.getElementById "outtext"
-	e.innerHTML = @txt
+	#wout("outtext",@txt)
+	
 	@encode()
+	#@decode()
+	false
+
+dec = ->
+	el = document.getElementById("selectCode")
+	if el.value == "ASCII Codierung"
+		@deccodeASCII()
+	else
+		@decodeHuffman()
+
+	wout "decodeout",@dectxt
+	false
+
+dHuffman = ->
+	#@huffman = Huffman.treeFromText @txt
+	@dectxt = @decodeHuffmanBitString @encbin
+	
+
+dASCII = ->
 	false
 
 enc = ->
@@ -92,25 +111,39 @@ enc = ->
 	else
 		@encodeHuffman()
 
-	@writeOut()
+	wout "encodeout",@encbin
+	false
 
-wout = ->
-	e = document.getElementById "decodeout"
-	e.innerHTML = @encbin
+wout = (eid,output)->
+	e = document.getElementById eid
+	while e.hasChildNodes()
+		e.removeChild e.lastChild
+	t = document.createTextNode output
+	e.appendChild t
+	false
+
+dHuffmanBitString = (j) ->
+    a = @encbin
+    i = "";
+    b = @huffman.root;
+    f = a.split ""
+    e = f.length
+    for g in [0...e]
+        h = f[g]
+        if h == "0" then c = "left" else c = "right"
+        b = b[c];
+        if b.isLeaf() 
+            i += b.value;
+            b = @huffman.root
+    i
 
 
 eHuffman = ->
 	@huffman = Huffman.treeFromText @txt
 	@enctxt = @huffman.encode @txt
-	encArray = []
-	for c in @enctxt
-		encArray.push c.charCodeAt()
-
-	@encbin = ""
-	for z in encArray
-		@encbin += z.toString(2)
-
-
+	@encbin = @huffman.stringToBitString @enctxt
+	#console.log @enctxt
+	#console.log @encbin
 	@treeEncoded = @huffman.encodeTree()
 	@genTree()
 	false
@@ -134,31 +167,44 @@ eASCII = ->
 
 huff =
 	txt: ""
+	dectxt: ""
 	enctxt: ""
 	encbin: ""
 	huffman: ""
 	treeEncoded: ""
-	setInput : sInput
-	encodeASCII : eASCII
-	encodeHuffman : eHuffman
+	setInput: sInput
+	encodeASCII: eASCII
+	encodeHuffman: eHuffman
 	encode: enc
+	decode: dec
+	decodeASCII: dASCII
+	decodeHuffman: dHuffman
+	decodeHuffmanBitString: dHuffmanBitString
 	writeOut: wout
 	genTree: buildTree
 
 
 # Events an Formular binden 
-# Enter
+# Enter Encode
 document.forms[0].onkeypress = (e) ->
 	if !e
 		e = window.event
 	if e.keyCode ==13
 		huff.setInput e.target
 		false
-# Click Decode
+# Click Encode
 bt = document.forms[0].button
 bt.onclick = (e) ->
  	huff.setInput e.target.form[0]	
  	false
+
+
+# Click Decode
+bt = document.forms[1].button
+bt.onclick = (e) ->
+ 	huff.decode()	
+ 	false
+
 
 
 # Click Encode
@@ -170,7 +216,8 @@ bt.onclick = (e) ->
 # Change Mode
 el = document.getElementById("selectCode")
 el.onchange = (e) ->
-	huff.encode()
+	if huff.enctxt != ""
+		huff.encode()
 	false
 
 
