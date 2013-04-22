@@ -12,6 +12,10 @@
 	left: 12px;
 }
 
+#btn_decode{
+	float: right;
+}
+
 .bigBox {
 	border: 2px solid black;
 }

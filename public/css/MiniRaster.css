@@ -9,6 +9,10 @@ pre{
 	max-height: 500px;
 }
 
+#btn_decode{
+	float: right;
+}
+
 #hint{
 	height: 250px;
 }

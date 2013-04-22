@@ -4,7 +4,7 @@ float r,t,w;
 
 void setup() {
 
-  img1 = loadImage("musik.png");
+  img1 = loadImage("zeit.png");
   size(img1.width, img1.height);
   img1.loadPixels();
   float z = 0;
