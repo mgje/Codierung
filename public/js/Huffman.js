@@ -39,12 +39,7 @@
       return false;
     } else {
       entry = {
-        name: name,
-        children: [
-          {
-            "name": inode
-          }
-        ]
+        name: name + ":" + inode
       };
       if (typeof onode !== "undefined") {
         onode.push(entry);
@@ -61,32 +56,29 @@
     appendNode(this.treeEncoded, tjson, "Huffman Baum     ");
     json = tjson[0];
     w = 780;
-    h = 600;
-    tree = d3.layout.tree().size([h, w - 350]);
+    h = 780;
+    tree = d3.layout.tree().size([h, w - 360]);
     diagonal = d3.svg.diagonal().projection(function(d) {
       return [d.y, d.x];
     });
-    vis = d3.select("#chart").append("svg").attr("width", w).attr("height", h).append("g").attr("transform", "translate(110, 0)");
+    vis = d3.select("#chart").append("svg").attr("width", w).attr("height", h).append("g").attr("transform", "translate(30, 10)");
     nodes = tree.nodes(json);
     link = vis.selectAll("path.link").data(tree.links(nodes)).enter().append("path").attr("class", "link").attr("d", diagonal);
     node = vis.selectAll("g.node").data(nodes).enter().append("g").attr("class", "node").attr("transform", function(d) {
       return "translate (" + d.y + "," + d.x + ")";
     });
-    node.append("circle").attr("r", 6.4);
-    return node.append("text").attr("dx", function(d) {
-      if (d.children) {
-        return 4;
-      } else {
-        return 10;
+    node.append("circle").attr("r", 7.4);
+    node.append("text").attr("dx", -4).attr("dy", 5).attr("text-anchor", "start").text(function(d) {
+      if (d.name[0] !== "H") {
+        return d.name[0];
       }
-    }).attr("dy", 4).attr("text-anchor", function(d) {
-      if (d.children) {
-        return "end";
+    });
+    return node.append("text").attr("dx", 11).attr("dy", 5).attr("text-anchor", "start").text(function(d) {
+      if (d.name[1] === ":") {
+        return d.name[2];
       } else {
-        return "start";
+        return "";
       }
-    }).text(function(d) {
-      return d.name;
     });
   };
 

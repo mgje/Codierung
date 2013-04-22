@@ -1,12 +1,22 @@
 
 body {
 	position: absolute;
-	left: 10px;
+	left: 6px;
 }
 
 pre{
-	height: 180px;
+	height: 170px;
 	max-height: 500px;
+}
+button{
+	float: right;
+}
+
+
+#encodeout{
+	height: 210px;
+	word-wrap:break-word;
+	overflow-y: scroll;
 }
 
 #outtext{

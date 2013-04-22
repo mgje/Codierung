@@ -11,15 +11,16 @@
 <body>
     <div class="container-fluid">
     <div class="row">
-    <div class="span5">
+    <div class="span6">
 	<h3>Kodieren / Dekodieren</h3>
-    <form class="form-search">
-    <input type="text" name="input1" class="input-xlarge  span6" type="text" value="Kenne mer nit, bruche mer nit, fott domet!" ><br>
-    <button type="submit" name="button" class="btn" ><i class="icon-chevron-right"></i>Kodieren </button>
+    <form class="">
+    <textarea id="input1" rows="5" name="input1" class="span6">Kenne mer nit, bruche mer nit, fott domet!
+    </textarea>
     <select  class="span3" id="selectCode">
             <option>ASCII Kodierung</option>
             <option>Huffman Kodierung</option>
     </select>
+     <button type="submit" name="button" class="btn" ><i class="icon-chevron-right"></i>Kodieren </button>
 	</form> 
     <!--
     <p> Text: </p>
@@ -27,19 +28,15 @@
     </pre>
 -->
     <p> Koodierter Text: </p>
-    <div class="control-group" >
-        <pre id="encodeout" class="pre-scrollable">
-        </pre>
-    </div>
-    <form class="form-search">
+    <div id="encodeout" class="alert alert-success"></div>
+    
+    <form class="offset4 span2">
     <button type="submit" name="button" class="btn" ><i class="icon-chevron-right"></i> Dekodieren </button>
     </form> 
 
     <p> Dekodierter Text: </p>
-    <div class="control-group" >
-        <pre id="decodeout" class="pre-scrollable">
-        </pre>
-    </div>
+    <pre id="decodeout" class="pre-scrollable">
+    </pre>
   
     </div>
     

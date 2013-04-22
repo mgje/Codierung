@@ -25,8 +25,7 @@ appendNode = (inode, onode, name) ->
 		false
 	else
 		entry =
-			name: name
-			children: [{"name": inode}]
+			name: name+":"+inode
 
 		if typeof onode != "undefined"
 			onode.push entry
@@ -42,9 +41,9 @@ buildTree = ->
 	json = tjson[0]
 
 	w = 780
-	h = 600
+	h = 780
 
-	tree = d3.layout.tree().size [h, w - 350]
+	tree = d3.layout.tree().size [h, w - 360]
 
 	diagonal = d3.svg.diagonal().projection (d)->
 		[d.y, d.x]
@@ -53,7 +52,7 @@ buildTree = ->
 	    .attr("width", w)
 	    .attr("height", h)
 	    .append("g")
-	    .attr("transform", "translate(110, 0)")
+	    .attr("transform", "translate(30, 10)")
 
 	nodes = tree.nodes json
 
@@ -72,18 +71,25 @@ buildTree = ->
 	      )
 
 	node.append("circle")
-	      .attr("r", 6.4)
+	    .attr("r", 7.4)
 	  
 	node.append("text")
-	      .attr("dx", (d) ->
-	      	if d.children then 4 else 10
-	      )
-	      .attr("dy", 4)
-	      .attr("text-anchor", (d) ->
-	      	if d.children then "end" else "start"
-	      )
+	      .attr("dx",-4)
+	      .attr("dy", 5)
+	      .attr("text-anchor", "start")
 	      .text( (d) ->
-	      	d.name
+	      	if d.name[0] != "H"
+	      		d.name[0]
+	      )
+	node.append("text")
+	      .attr("dx", 11)
+	      .attr("dy", 5)
+	      .attr("text-anchor", "start")
+	      .text( (d) ->
+	      	if d.name[1]==":"
+	      		d.name[2]
+	      	else
+	      		""
 	      )
 
 #  End Tree
