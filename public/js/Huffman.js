@@ -92,7 +92,7 @@
     var el;
 
     el = document.getElementById("selectCode");
-    if (el.value === "ASCII Kodierung") {
+    if (el.value === "ASCII Codierung") {
       this.decodeASCII();
     } else {
       this.decodeHuffman();
@@ -113,7 +113,7 @@
     var e, el;
 
     el = document.getElementById("selectCode");
-    if (el.value === "ASCII Kodierung") {
+    if (el.value === "ASCII Codierung") {
       this.encodeASCII();
       e = clearAllChilds("chart");
     } else {

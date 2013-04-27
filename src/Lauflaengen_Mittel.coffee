@@ -71,6 +71,21 @@ encodeRLE = ->
 	@code.push z				 
 	@code.join()
 
+encodeBIT = ->
+	@code =[]
+	@code.push @col
+	for pixel in @matrix
+		@code.push pixel
+					 
+	@code.join()
+
+enc = ->
+	el = document.getElementById("selectCode")
+	if el.value == "Bitmap Codierung"
+		@enBIT()
+	else
+		@enRLE()
+
 decodeRLE = ->
 	col = @code.shift()
 	if col > @maxcol
@@ -89,6 +104,31 @@ decodeRLE = ->
 			@row +=1
 	@code.unshift(col)
 	false
+
+decodeBIT = ->
+	col = @code.shift()
+	if col > @maxcol
+		alert "Es können nicht #{col} Pixel pro Zeile dargestellt werden. Die maximale Anzahl Pixel beträgt #{@maxcol} "
+	else
+		@col = col
+		@matrix = []
+		for c in @code
+			if c==0 or c==1
+				@matrix.push(c)				
+
+		@row = Math.floor @matrix.length/@col
+		# Angefangene Zeile
+		if @row != Math.round @matrix.length/@col
+			@row +=1
+	@code.unshift(col)
+	false
+
+dec = ->
+	el = document.getElementById("selectCode")
+	if el.value == "Bitmap Codierung"
+		@decBIT()
+	else
+		@decRLE()
 
 # Clone the Figure
 makeclone = () ->
@@ -140,7 +180,7 @@ evaluateInput = (form) ->
 	@buildFromCode()
 
 bfromcode = () ->
-	@decRLE()
+	@decode()
 	clearAllChilds "code"
 	@element.innerHTML = grid.createGrid().join ''
 	@defgridborder()
@@ -148,10 +188,8 @@ bfromcode = () ->
 	wout "rowcol","#{@col} x #{@row} |         #{@col} Spalten / #{@row} Zeilen"
 	false
 
-
-
 outCode = ->
-	tmps = @enRLE()
+	tmps = @encode()
 	(document.getElementById "rle_code").value = tmps
 	wout "rle_code",tmps
 
@@ -181,8 +219,12 @@ grid =
 	createMat: createRandomMatrix
 	updateMat: updateMatrix
 	enRLE: encodeRLE
+	enBIT: encodeBIT
+	encode: enc
 	evalinp: evaluateInput
 	decRLE: decodeRLE
+	decBIT:	decodeBIT
+	decode: dec
 	outCodeToForm: outCode
 	addcol: addcolumn
 	mincol: mincolumn
@@ -196,7 +238,7 @@ grid.defgridborder()
 grid.element.addEventListener "click", handleronChange, false
 grid.createMat()
 grid.updateMat()
-grid.enRLE()
+grid.encode()
 
 
 # Events an Formular binden 
@@ -238,3 +280,9 @@ bt4 = document.getElementById "btn_clone"
 bt4.onclick = (e) ->
  	grid.clone()
  	false 	
+
+# Change Mode
+el = document.getElementById("selectCode")
+el.onchange = (e) ->
+	grid.outCodeToForm()
+	false

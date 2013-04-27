@@ -102,7 +102,7 @@ sInput = (form) ->
 
 dec = ->
 	el = document.getElementById("selectCode")
-	if el.value == "ASCII Kodierung"
+	if el.value == "ASCII Codierung"
 		@decodeASCII()
 	else
 		@decodeHuffman()
@@ -120,7 +120,7 @@ dASCII = ->
 
 enc = ->
 	el = document.getElementById("selectCode")
-	if el.value == "ASCII Kodierung"
+	if el.value == "ASCII Codierung"
 		@encodeASCII()
 		e = clearAllChilds "chart"
 	else
