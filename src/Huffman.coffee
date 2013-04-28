@@ -127,6 +127,7 @@ enc = ->
 		@encodeHuffman()
 
 	wout "encodeout",@encbin
+	wout "Bits",""+@encbin.length+" Bits"
 	false
 
 dHuffmanBitString = (tbin) ->

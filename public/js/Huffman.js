@@ -120,6 +120,7 @@
       this.encodeHuffman();
     }
     wout("encodeout", this.encbin);
+    wout("Bits", "" + this.encbin.length + " Bits");
     return false;
   };
 
