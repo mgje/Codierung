@@ -118,6 +118,13 @@ dHuffman = ->
 dASCII = ->
 	@dectxt = @decodeASCIIBitString @encbin
 
+
+cBits = ->
+	tmp = 0
+	for c in @encbin
+		if c == "1" or c == "0" then tmp +=1
+	tmp+" Bits"
+
 enc = ->
 	el = document.getElementById("selectCode")
 	if el.value == "ASCII Codierung"
@@ -127,7 +134,7 @@ enc = ->
 		@encodeHuffman()
 
 	wout "encodeout",@encbin
-	wout "Bits",""+@encbin.length+" Bits"
+	wout "Bits",@countBits()
 	false
 
 dHuffmanBitString = (tbin) ->
@@ -192,6 +199,7 @@ huff =
 	encodeASCII: eASCII
 	encodeHuffman: eHuffman
 	encode: enc
+	countBits: cBits
 	decode: dec
 	decodeASCII: dASCII
 	decodeHuffman: dHuffman
