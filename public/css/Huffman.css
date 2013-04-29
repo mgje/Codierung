@@ -5,7 +5,7 @@ body {
 }
 
 pre{
-	height: 170px;
+	height: 220px;
 	max-height: 500px;
 }
 button{
@@ -14,15 +14,35 @@ button{
 
 #codierung{margin: 0 0 0px;}
 
+#huffmanCode{
+	float: left;
+}
+
 #encodeout{
-	height: 210px;
+	height: 260px;
 	word-wrap:break-word;
 	overflow-y: scroll;
 }
 
-#outtext{
-	height: 90px;
+#decodeout{
+	height: 60px;
 }
+
+#outtext{
+	height: 20px;
+}
+
+.Hcode{
+	float: left;
+	position: relative;
+	font-size: 18px;
+	line-height: 20px;
+	
+}
+
+.Hcode.odd{background: #EFF8D2;}
+
+.Hcode.even { background: #FFF7FC; }
 
 .zeile {
 	clear: both;

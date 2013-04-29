@@ -32,7 +32,6 @@ appendNode = (inode, onode, name) ->
 		
 		false
 
-
 #  Begin Tree
 buildTree = ->
 	e = clearAllChilds "chart"
@@ -91,15 +90,15 @@ buildTree = ->
 	      	else
 	      		""
 	      )
-
 #  End Tree
 
-
+# Behaviour Form Change
 sInput = (form) ->
 	@txt = form.value
 	@encode()
 	false
 
+# Decode binary codes
 dec = ->
 	el = document.getElementById("selectCode")
 	if el.value == "ASCII Codierung"
@@ -113,11 +112,9 @@ dec = ->
 dHuffman = ->
 	#@huffman = Huffman.treeFromText @txt
 	@dectxt = @decodeHuffmanBitString @encbin
-	
 
 dASCII = ->
 	@dectxt = @decodeASCIIBitString @encbin
-
 
 cBits = ->
 	tmp = 0
@@ -126,20 +123,26 @@ cBits = ->
 	tmp+" Bits"
 
 enc = ->
-	el = document.getElementById("selectCode")
+	el = document.getElementById "selectCode" 
 	if el.value == "ASCII Codierung"
 		@encodeASCII()
 		e = clearAllChilds "chart"
+		#wout "encodeout",@encbin
+		el2 = document.getElementById "encodeout"
+		el2.innerHTML = @encHTMLbin
 	else
 		@encodeHuffman()
+		#wout "encodeout",@encHTMLbin
+		el2 = document.getElementById "encodeout"
+		el2.innerHTML = @encHTMLbin
 
-	wout "encodeout",@encbin
 	wout "Bits",@countBits()
+	$(".Hcode").tooltip()
 	false
 
 dHuffmanBitString = (tbin) ->
     i = "";
-    b = @huffman.root;
+    b = @huffman.root
     f = tbin.split ""
     e = f.length
     for g in [0...e]
@@ -151,8 +154,32 @@ dHuffmanBitString = (tbin) ->
             b = @huffman.root
     i
 
+gHTMLbin = (tbin) ->
+	i = "<div class='Hcode even' rel='tooltip' data-placement='top' title=' #{@txt[0]} '>"
+	b = @huffman.root
+	f = tbin.split ""
+	e = f.length
+	pos = 0
+	for g in [0...e]
+		h = f[g]
+		if h == "0" then c = "left" else c = "right"
+		i += h
+		b = b[c]; # next Position on Tree
+		if b.isLeaf()
+			pos += 1  #Next Character
+			if pos%2 == 0 then cl = "Hcode even" else cl = "Hcode odd"
+			i += "</div><div class='#{cl}' rel='tooltip' data-placement='top' title=' #{@txt[pos]} '>"
+			b = @huffman.root # reset to root
+
+	#remove last div Element
+	s= "<div class='#{cl}' rel='tooltip' data-placement='top' title=' #{@txt[pos]} '>"
+	i = i.substring(0, i.length - s.length)
+	i+= "</div>"
+	i
+
 dASCIIBitString = (tbin) ->
-	code = tbin.split(" ")
+	
+	code = tbin.match /.{1,8}/g  # create 8Bit Blocks
 	s= ""
 	for c in code
 		k = parseInt c,2 
@@ -160,17 +187,14 @@ dASCIIBitString = (tbin) ->
 		s +=z
 	s
 
-
 eHuffman = ->
 	@huffman = Huffman.treeFromText @txt
 	@enctxt = @huffman.encode @txt
 	@encbin = @huffman.stringToBitString @enctxt
-	#console.log @enctxt
-	#console.log @encbin
+	@encHTMLbin = @genEncHTMLbin @encbin
 	@treeEncoded = @huffman.encodeTree()
 	@genTree()
 	false
-	
 
 eASCII = ->
 	@enctxt = @txt
@@ -179,23 +203,38 @@ eASCII = ->
 		encArray.push c.charCodeAt()
 
 	@encbin = ""
+	
+	@encHTMLbin = "<div id='huffmanCode' ><div class='Hcode even' rel='tooltip' data-placement='top' title=' #{@txt[0]}  '>"
+	j = 1
 	for z in encArray
 		s = z.toString(2)
 		n = 8-s.length
 		if n > 0
 			for i in [0...n]
 				@encbin += "0"
-		@encbin += s+" "
+				@encHTMLbin += "0"
+		
+		if j%2 == 0 then cl = "Hcode even" else cl = "Hcode odd"
+		@encbin += s
+		@encHTMLbin += s
+		@encHTMLbin += "</div><div class='#{cl}' rel='tooltip' data-placement='top' title=' #{@txt[j]} '>"
+		j += 1
+	#remove last div Element
+	ts= "<div class='#{cl}' rel='tooltip' data-placement='top' title=' #{@txt[j]} '>"
+	@encHTMLbin = @encHTMLbin.substring(0, @encHTMLbin.length - ts.length)
+	@encHTMLbin += "</div></div>"	
+	false
 	
-
+# Huffman Object
 huff =
-	txt: ""
-	dectxt: ""
-	enctxt: ""
-	encbin: ""
-	huffman: ""
-	treeEncoded: ""
-	setInput: sInput
+	txt: ""			# Plain Text input
+	dectxt: ""		# Decoded Text 
+	enctxt: ""		# Encoded Text with 01
+	encbin: ""		# Encoded Text huffan Compressed
+	encHTMLbin: ""  # Encoded HTML huffan Compressed
+	huffman: ""		# huffman Object from lib
+	treeEncoded: "" # Treerepresentation
+	setInput: sInput          #Methods
 	encodeASCII: eASCII
 	encodeHuffman: eHuffman
 	encode: enc
@@ -204,10 +243,10 @@ huff =
 	decodeASCII: dASCII
 	decodeHuffman: dHuffman
 	decodeHuffmanBitString: dHuffmanBitString
+	genEncHTMLbin: gHTMLbin
 	decodeASCIIBitString: dASCIIBitString
 	writeOut: wout
 	genTree: buildTree
-
 
 # Events an Formular binden 
 # Enter Encode
@@ -223,14 +262,11 @@ bt.onclick = (e) ->
  	huff.setInput e.target.form[0]	
  	false
 
-
 # Click Decode
 bt = document.forms[1].button
 bt.onclick = (e) ->
  	huff.decode()	
  	false
-
-
 
 # Click Encode
 # bt2 = document.forms[1].button
@@ -244,5 +280,9 @@ el.onchange = (e) ->
 	if huff.enctxt != ""
 		huff.encode()
 	false
+
+
+
+
 
 
