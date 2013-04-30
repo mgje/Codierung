@@ -356,7 +356,7 @@
   bt = document.getElementById("btn_decode");
 
   bt.onclick = function(e) {
-    grid.evalinp(e.target.form[0]);
+    grid.evalinp(document.getElementById("rle_code"));
     return false;
   };
 
