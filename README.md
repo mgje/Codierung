@@ -5,7 +5,7 @@ Die interaktive Experimente zur Huffman-Codierung von Texten und
 der Lauflängen Codierung von Bildern können direkt unter dem folgenden
 Link betrachtet werden.
 
-[Demonstration der Experimente](http://mgje.github.io/Codierung)
+[Demonstration der Experimente](http://mgje.github.io/Codierung/)
 
 
 
