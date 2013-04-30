@@ -1,10 +1,10 @@
 Codierung
 =========
 
-Beispiele von Codierungstechniken für die Schule
+Interaktive Experiment zur Huffman-Codierung von Texten und 
+der Lauflängen Codierung von Bildern.
 
-Der folgende Link führt zu einer konfigurierbaren Zahlenmauer:
-[Demonstration Zahlenmauer](http://mgje.github.com/ZahlenMauer/)
+[Demonstration der Experiment](http://mgje.github.com/ZahlenMauer/)
 
 Um erste Erfahrungen zu [CoffeeScript](http://coffeescript.org/) (sehr 
 effiziente Sprache für JavaScript Programmierung) zu sammeln, erstellte 
@@ -30,20 +30,14 @@ Für die graphische Ausgabe werden die folgenden Bibliotheken verwendet:
 - d3 (Baum)
 - jQuery (Tooltip)
 
-Die Huffman-Codierung wurde von 
+Das Experiment zur Huffman-Codierung verwendet die Bibliothek [huffman JS](https://github.com/wilkerlucio/huffman_js)
+von [Wilker Lúcio](https://github.com/wilkerlucio)
 
-Um eigene Änderungen einzubringen, sollte die Datei [zahlenmauer.coffee](src/zahlenmauer.coffee) 
-im Ordner src entsprechend angepasst werden. 
-
-Das kompakte und übersichtliche CoffeeScript Programm[zahlenmauer.coffee](src/zahlenmauer.coffee)
-wird in ein korrektes, jedoch schwieriger lesbares JavaScript Programm [zahlenmauer.js](public/js/zahlenmauer.js) 
-übersetzt. 
-
+CoffeeScript ermöglicht es kompakte und übersichtliche Programme zu erstellen.
 Weitere Informationen zum Arbeiten mit CoffeeScript finden sich unter:
 [http://coffeescript.org/](http://coffeescript.org/)
 
-Mögliche Erweiterungen 
-======================
-- Zufällige generierte Zahlenmauern 
-- Zahlenmauern mit Lücken für Arbeitsblätter
-- Interaktive Zahlenmauern - SuS können ihre Resultate direkt eingeben
+Mögliche Weiterentwicklung:
+
+- LZW Codierung
+
