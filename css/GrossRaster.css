@@ -20,6 +20,11 @@ pre{
 #codeout{
 	height: 250px;
 }
+.container-fluid {
+padding-right: 0px;
+padding-left: 0px;
+}
+
 
 .zeile {
 	clear: both;
