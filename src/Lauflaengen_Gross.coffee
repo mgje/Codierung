@@ -11,7 +11,6 @@ clearAllChilds = (id)->
 		e.removeChild e.lastChild
 	e
 
-
 # Create Grid
 createCodeBlock = (k,n) ->
 	for i in [0..n]
@@ -249,15 +248,14 @@ document.forms[0].onkeypress = (e) ->
 	if e.keyCode ==13
 		grid.evalinp e.target
 		false
+
 # Click Decode
-#bt = document.forms[0].button
 bt = document.getElementById "btn_decode"
 bt.onclick = (e) ->
- 	grid.evalinp e.target.form[0]	
+ 	grid.evalinp document.getElementById "rle_code"
  	false
 
 # Click Encode
-#bt2 = document.forms[1].button
 bt2 = document.getElementById "btn_encode"
 bt2.onclick = (e) ->
  	grid.outCodeToForm()
