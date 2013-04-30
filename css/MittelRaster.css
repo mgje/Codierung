@@ -1,7 +1,11 @@
 
 body {
 	position: absolute;
-	left: 10px;
+	left: 4px;
+}
+.container-fluid {
+padding-right: 0px;
+padding-left: 0px;
 }
 
 pre{
