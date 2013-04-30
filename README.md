@@ -1,17 +1,13 @@
-Codierung
-=========
+Codierung / Decodierung
+=======================
 
-Interaktive Experiment zur Huffman-Codierung von Texten und 
-der Lauflängen Codierung von Bildern.
+Die interaktive Experimente zur Huffman-Codierung von Texten und 
+der Lauflängen Codierung von Bildern können direkt unter dem folgenden
+Link betrachtet werden.
 
-[Demonstration der Experiment](http://mgje.github.com/ZahlenMauer/)
+[Demonstration der Experiment](http://mgje.github.io/Codierung)
 
-Um erste Erfahrungen zu [CoffeeScript](http://coffeescript.org/) (sehr 
-effiziente Sprache für JavaScript Programmierung) zu sammeln, erstellte 
-ich im Rahmen eines 90 Minuten Projektes diese einfache Webanwendung. 
 
-Aus einer Liste von Zahlen wird jeweils die Summe der direkten
-Nachbarn gebildet und auf einer höheren Ebene ausgegeben.
 
 Installation
 ============
