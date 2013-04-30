@@ -1,0 +1,37 @@
+.row {
+	clear: both;
+}
+
+.cell {
+	float: left;
+}
+
+.bigBox {
+	border: 2px solid black;
+}
+
+.smallBox {
+	border: 1px solid #8A847D;
+	width: 20px;
+	height: 20px;
+	background: #858585;
+}
+
+.innerBox{
+	position: relative;
+	left: 0px;
+	top: 0px;
+	width: 20px;
+	height: 20px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+}
+
+.null{
+	background-color: #F8E9E4;
+}
+
+.eins{
+	background-color: #384132;
+	
+}
