@@ -177,13 +177,14 @@ Huffman.TreeBuilder.prototype.buildFrequencyTable = function() {
 };
 Huffman.TreeBuilder.prototype.frequencySorter = function(d, c) {
     // Looking on two components !!!
-    return [d[0],d[1]] > [c[0],c[1]] ? 1 : -1
+    return d[0] > c[0] ? 1 : (d[0] < c[0]? -1 : (d[1] < c[1]? 1:(d[1] > c[1]? -1:0 )))
     //return d[0] != c[0] ? d[0]-c[0] : d[1] < c[1]
     //return d[0] != c[0] ? d[0]-c[0] : (typeof d[1] == "string" && typeof c[1] == "string" ? d[1].charCodeAt(0)-c[1].charCodeAt(0) :0)
     // return d[0] > c[0] ? 1 : (d[0] < c[0] ? -1 : 0)
 };
 Huffman.TreeBuilder.prototype.combineTable = function(b) {
     var c, a;
+    b.sort(this.frequencySorter)
     while (b.length > 1) {
         c = b.shift();
         a = b.shift();
