@@ -7,39 +7,45 @@ enc_lzw = (s) ->
 	out = []
 	outchar = []
 	phrase = data[0]
-	code = 256
+	code = 8
 	for i in [1...data.length]
     	currChar=data[i]
     	if @dict[phrase + currChar] != undefined 
             phrase += currChar
         else
-        	if phrase.length>1 then  out.push @dict[phrase] else out.push phrase.charCodeAt 0
+        	if phrase.length>1 then  out.push @dict[phrase] else out.push @farbNr[phrase]
         	@dict[phrase + currChar] = code
         	code++
         	phrase=currChar
+    # Anzahl Code Elemente
+    @anzCode = code
+    if phrase.length > 1 then out.push @dict[phrase] else out.push @farbNr[phrase]
     
-    
-
-    if phrase.length > 1 then out.push @dict[phrase] else out.push phrase.charCodeAt 0
-    for i in [0...out.length]
-        outchar[i] = String.fromCharCode out[i]
-   
-    outchar.join ""
-
+    elformat = document.getElementById("selectCodeFormat")
+	if elformat.value == "Zeichen"
+		for i in [0...out.length]
+			outchar[i] = String.fromCharCode out[i]+97
+		outchar.join ""
+	else if elformat.value == "Zahlen Code"
+		out.join ","
+	else
+		for i in [0...out.length]
+			outchar[i] = out[i].toString(2)
+		outchar.join ","
  
 # Decompress an LZW-encoded string
 dec_lzw = (s) ->
 	dict = {}
-	data = (s + "").split ""
-	currChar = data[0]
+	data = (s + "").split ","
+	currChar = @farbCode[parseInt data[0]]
 	oldPhrase = currChar
 	out = [currChar]
-	code = 256
+	code = 8
 
 	for i in [1...data.length]
-        currCode = data[i].charCodeAt 0 
-        if currCode < 256
-        	phrase = data[i];
+        currCode = data[i]
+        if currCode < 8
+        	phrase = @farbCode[parseInt currCode]
         else
         	if dict[currCode] then phrase=dict[currCode] else phrase = oldPhrase + currChar
         
@@ -50,11 +56,6 @@ dec_lzw = (s) ->
         oldPhrase = phrase
     
     out.join ""
-
-console.log enc_lzw "Halloaaallallaoooaooaollaooaloaoaoloaolaooalaohhaohaohao"
-console.log dec_lzw enc_lzw "Halloaaallallaoooaooaollaooaloaoaoloaolaooalaohhaohaohao"
-# console.log lzw_encode "Halloaaallallaoooaooaollaooaloaoaoloaolaooalaohhaohaohao"
-# console.log lzw_decode lzw_encode "Halloaaallallaoooaooaollaooaloaoaoloaolaooalaohhaohaohao"
 
 #DOM Help Functions
 wout = (eid,output)->
@@ -110,9 +111,14 @@ updateMatrix = ->
 			e = (document.getElementById id).getElementsByTagName "div"
 			e[0].className = "innerBox #{@farbTab[@matrix[id]]}"
 
-
+#Code Table
 createRowCodeTable = ->
-	for key of grid.dict
+	keys =[]
+	for k of grid.dict
+		keys.push k
+
+	keys.sort()
+	for key in keys
 		"""
 		<tr>
 		  <td>#{key}</td>
@@ -127,10 +133,13 @@ createCodeTable = ->
 	<th>
     LZW Tabelle
     </th>
+    <th>
+    Anzahl Codes: #{grid.anzCode}
+    </th>
     </thead>
     <tbody class="">
        <tr>
-         <td><b>ID</b></td>
+         <td><b>PIXEL</b></td>
          <td><b>WERT</b></td>
         </tr>
     
@@ -154,6 +163,7 @@ encodeBIT = ->
 		s += pixel
 	@code +=","+s
 
+# Encoding
 enc = ->
 	el = document.getElementById("selectCode")
 	if el.value == "Bitmap Codierung"
@@ -162,14 +172,20 @@ enc = ->
 		@enLZW()
 
 decodeLZW = ->
+	elformat = document.getElementById "selectCodeFormat"
 	tmpc = @code.split "," 
-	col = parseInt tmpc[0]
+	if elformat.value == "Zeichen"
+		col = parseInt tmpc[0]
+		tmp = @decode_lzw tmpc[1]
+	else
+		col = parseInt tmpc.shift()
+		tmp = @decode_lzw tmpc.join ","
 	if col > @maxcol
 		alert "Es können nicht #{col} Pixel pro Zeile dargestellt werden. Die maximale Anzahl Pixel beträgt #{@maxcol} "
 	else
 		@col = col
 		@matrix = []
-		tmp = dec_lzw tmpc[1]
+
 		for c in tmp.split ""
 			if (c of @farbTab)
 				@matrix.push(c)				
@@ -246,11 +262,16 @@ addcolumn = () ->
 # Ausertung des Formularfeldes
 evaluateInput = (form) ->
 	input = form.value
+	el = document.getElementById "selectCode"
 	zm = []	
 	inp = input.split ","
-	zm.push parseInt inp[0]
-	zm.push inp[1]
-	@code = zm.join ","
+	if el.value == "Bitmap Codierung"
+		zm.push parseInt inp[0]
+		zm.push inp[1]
+		@code = zm.join ","
+	else
+		@code = inp.join ","
+	
 	@decode()
 	@buildFromCode()
 
@@ -312,7 +333,7 @@ grid =
 	maxcol: 22
 	size: 28
 	farb: "P"
-	anzFarb: 7
+	anzFarb: 8
 	matrix: []
 	code: ""
 	createGrid: createCodeRows
@@ -324,6 +345,7 @@ grid =
 	encode: enc
 	evalinp: evaluateInput
 	encode_lzw: enc_lzw
+	decode_lzw: dec_lzw
 	decLZW: decodeLZW
 	decBIT:	decodeBIT
 	decode: dec
@@ -335,13 +357,14 @@ grid =
 
 
 grid.farbTab =
-	"W": "weiss"
-	"R": "rot"
-	"P": "hellrosa"
-	"N": "braun"
-	"B": "blau"
-	"G": "gelb"
-	"S": "schwarz"
+	"W" : "weiss"
+	"R" : "rot"
+	"P" : "hellrosa"
+	"N" : "braun"
+	"B" : "blau"
+	"G" : "gelb"
+	"S" : "schwarz"
+	"U" : "gruen"
 
 grid.farbCode =
 	0 : "W"
@@ -351,6 +374,7 @@ grid.farbCode =
 	4 :	"B"
 	5 : "G"
 	6 : "S"
+	7 : "U"
 	
 grid.farbNr =
 	"W" : 0
@@ -360,6 +384,7 @@ grid.farbNr =
 	"B" : 4
 	"G" : 5
 	"S" : 6
+	"U"	: 7
 
 grid.element = document.getElementById "code"
 grid.element.innerHTML= grid.createGrid().join ""
@@ -369,9 +394,13 @@ selectFarb grid.farb
 
 
 grid.element.addEventListener "click",handleronChange,false
-grid.createMat()
-grid.updateMat()
-grid.encode()
+#Random Start
+#grid.createMat()
+#grid.updateMat()
+#grid.encode()
+
+# Start with Mario
+grid.evalinp document.getElementById "rle_code"
 
 
 btf = document.getElementById "selectColor"
@@ -417,7 +446,19 @@ bt4.onclick = (e) ->
  	false 	
 
 # Change Mode
-el = document.getElementById("selectCode")
+el = document.getElementById "selectCode"
 el.onchange = (e) ->
+	elformat = document.getElementById "selectCodeFormat"
+	if el.value == "Bitmap Codierung"
+		elformat.className = "span2 hide"
+	else
+		elformat.className = "span2"
 	grid.outCodeToForm()
 	false
+
+elformat = document.getElementById "selectCodeFormat"
+elformat.onchange = (e) ->
+	grid.outCodeToForm()
+	false
+
+
