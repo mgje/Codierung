@@ -139,7 +139,7 @@ createCodeTable = ->
     </thead>
     <tbody class="">
        <tr>
-         <td><b>PIXEL</b></td>
+         <td><b>PIXEL FARBE</b></td>
          <td><b>WERT</b></td>
         </tr>
     
@@ -174,25 +174,33 @@ enc = ->
 decodeLZW = ->
 	elformat = document.getElementById "selectCodeFormat"
 	tmpc = @code.split "," 
-	if elformat.value == "Zeichen"
-		col = parseInt tmpc[0]
-		tmp = @decode_lzw tmpc[1]
-	else
+	if elformat.value == "Zahlen Code" 
 		col = parseInt tmpc.shift()
 		tmp = @decode_lzw tmpc.join ","
+	else if elformat.value == "Binär Code"
+		col = parseInt tmpc.shift()
+		tmpc2 = []
+		for x in tmpc
+			tmpc2.push parseInt x,2
+		tmp = @decode_lzw tmpc2.join ","
+	else
+		alert "not Implemented"
+		col = 10000
+		# col = parseInt tmpc[0]
+		# tmp = @decode_lzw tmpc[1]
 	if col > @maxcol
 		alert "Es können nicht #{col} Pixel pro Zeile dargestellt werden. Die maximale Anzahl Pixel beträgt #{@maxcol} "
 	else
 		@col = col
 		@matrix = []
-
+        # Code in der Form "PPPNNGS"
 		for c in tmp.split ""
 			if (c of @farbTab)
-				@matrix.push(c)				
+				@matrix.push c
 
 		@row = Math.floor @matrix.length/@col
 		# Angefangene Zeile
-		if @row != Math.round @matrix.length/@col
+		if @row != 1.0*@matrix.length/@col
 			@row +=1
 	false
 
@@ -210,7 +218,7 @@ decodeBIT = ->
 
 		@row = Math.floor @matrix.length/@col
 		# Angefangene Zeile
-		if @row != Math.round @matrix.length/@col
+		if @row != @matrix.length/@col
 			@row +=1
 	false
 

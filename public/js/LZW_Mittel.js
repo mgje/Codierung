@@ -180,7 +180,7 @@
   };
 
   createCodeTable = function() {
-    return "<table class=\"table table-bordered table-striped span4\">\n<thead>\n<th>\n    LZW Tabelle\n    </th>\n    <th>\n    Anzahl Codes: " + grid.anzCode + "\n    </th>\n    </thead>\n    <tbody class=\"\">\n       <tr>\n         <td><b>PIXEL</b></td>\n         <td><b>WERT</b></td>\n        </tr>\n    \n    " + (createRowCodeTable().join("")) + "\n</tbody>\n</table>	";
+    return "<table class=\"table table-bordered table-striped span4\">\n<thead>\n<th>\n    LZW Tabelle\n    </th>\n    <th>\n    Anzahl Codes: " + grid.anzCode + "\n    </th>\n    </thead>\n    <tbody class=\"\">\n       <tr>\n         <td><b>PIXEL FARBE</b></td>\n         <td><b>WERT</b></td>\n        </tr>\n    \n    " + (createRowCodeTable().join("")) + "\n</tbody>\n</table>	";
   };
 
   encodeLZW = function() {
@@ -219,16 +219,24 @@
   };
 
   decodeLZW = function() {
-    var c, col, elformat, tmp, tmpc, _i, _len, _ref;
+    var c, col, elformat, tmp, tmpc, tmpc2, x, _i, _j, _len, _len1, _ref;
 
     elformat = document.getElementById("selectCodeFormat");
     tmpc = this.code.split(",");
-    if (elformat.value === "Zeichen") {
-      col = parseInt(tmpc[0]);
-      tmp = this.decode_lzw(tmpc[1]);
-    } else {
+    if (elformat.value === "Zahlen Code") {
       col = parseInt(tmpc.shift());
       tmp = this.decode_lzw(tmpc.join(","));
+    } else if (elformat.value === "Binär Code") {
+      col = parseInt(tmpc.shift());
+      tmpc2 = [];
+      for (_i = 0, _len = tmpc.length; _i < _len; _i++) {
+        x = tmpc[_i];
+        tmpc2.push(parseInt(x, 2));
+      }
+      tmp = this.decode_lzw(tmpc2.join(","));
+    } else {
+      alert("not Implemented");
+      col = 10000;
     }
     if (col > this.maxcol) {
       alert("Es können nicht " + col + " Pixel pro Zeile dargestellt werden. Die maximale Anzahl Pixel beträgt " + this.maxcol + " ");
@@ -236,14 +244,14 @@
       this.col = col;
       this.matrix = [];
       _ref = tmp.split("");
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        c = _ref[_i];
+      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+        c = _ref[_j];
         if (c in this.farbTab) {
           this.matrix.push(c);
         }
       }
       this.row = Math.floor(this.matrix.length / this.col);
-      if (this.row !== Math.round(this.matrix.length / this.col)) {
+      if (this.row !== 1.0 * this.matrix.length / this.col) {
         this.row += 1;
       }
     }
@@ -268,7 +276,7 @@
         }
       }
       this.row = Math.floor(this.matrix.length / this.col);
-      if (this.row !== Math.round(this.matrix.length / this.col)) {
+      if (this.row !== this.matrix.length / this.col) {
         this.row += 1;
       }
     }

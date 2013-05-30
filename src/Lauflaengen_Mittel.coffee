@@ -100,7 +100,7 @@ decodeRLE = ->
 			if farb == 0 then farb = 1 else farb = 0
 		@row = Math.floor @matrix.length/@col
 		# Angefangene Zeile
-		if @row != Math.round @matrix.length/@col
+		if @row != @matrix.length/@col
 			@row +=1
 	@code.unshift(col)
 	false
@@ -118,7 +118,7 @@ decodeBIT = ->
 
 		@row = Math.floor @matrix.length/@col
 		# Angefangene Zeile
-		if @row != Math.round @matrix.length/@col
+		if @row != @matrix.length/@col
 			@row +=1
 	@code.unshift(col)
 	false

@@ -168,7 +168,7 @@
         }
       }
       this.row = Math.floor(this.matrix.length / this.col);
-      if (this.row !== Math.round(this.matrix.length / this.col)) {
+      if (this.row !== this.matrix.length / this.col) {
         this.row += 1;
       }
     }
@@ -193,7 +193,7 @@
         }
       }
       this.row = Math.floor(this.matrix.length / this.col);
-      if (this.row !== Math.round(this.matrix.length / this.col)) {
+      if (this.row !== this.matrix.length / this.col) {
         this.row += 1;
       }
     }
