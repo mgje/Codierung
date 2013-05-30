@@ -21,6 +21,18 @@ enc_lzw = (s) ->
     @anzCode = code
     if phrase.length > 1 then out.push @dict[phrase] else out.push @farbNr[phrase]
     
+    # calc Code Length
+    bits = 8
+    for c in out
+    	if c < 256
+    		bits += 8
+    	else if bits < 65536
+    		bits += 16
+    	else 
+    		bits += 24
+    @bits = bits
+    @outputParameters()
+
     elformat = document.getElementById("selectCodeFormat")
 	if elformat.value == "Zeichen"
 		for i in [0...out.length]
@@ -55,6 +67,19 @@ dec_lzw = (s) ->
         code++
         oldPhrase = phrase
     
+    # calc Code Length
+    bits = 8
+    for s in data
+    	c = parseInt s
+    	if c < 256
+    		bits += 8
+    	else if bits < 65536
+    		bits += 16
+    	else 
+    		bits += 24
+    @bits = bits
+    @outputParameters()
+
     out.join ""
 
 #DOM Help Functions
@@ -128,7 +153,7 @@ createRowCodeTable = ->
 
 createCodeTable = ->
 	"""
-	<table class="table table-bordered table-striped span4">
+	<table class="table table-bordered table-striped">
 	<thead>
 	<th>
     LZW Tabelle
@@ -157,10 +182,38 @@ encodeLZW = ->
 	@code
 
 encodeBIT = ->
+	# Bits berechnen
+	@bits = @matrix.length * 3 +8
+	@outputParameters()
 	@code = @col.toString()
 	s = ""
 	for pixel in @matrix
 		s += pixel
+	@code +=","+s
+
+encodeL = ->
+	@bits = 8
+	@code = @col.toString()
+	s = ""
+	farbe = @matrix[0]
+	z = 0
+	for pixel in @matrix
+		if pixel == farbe
+			z = z+1
+		else
+			s+=z.toString()+farbe
+			if z < 256
+				@bits += 11
+			else
+				@bits += 19
+			z = 1
+			farbe = pixel
+	s+=z.toString()+farbe
+	if z < 256
+		@bits += 11
+	else
+		@bits += 19
+	@outputParameters()
 	@code +=","+s
 
 # Encoding
@@ -168,8 +221,10 @@ enc = ->
 	el = document.getElementById("selectCode")
 	if el.value == "Bitmap Codierung"
 		@enBIT()
-	else
+	else if el.value == "LZW Codierung"
 		@enLZW()
+	else
+		@enL()
 
 decodeLZW = ->
 	elformat = document.getElementById "selectCodeFormat"
@@ -214,7 +269,39 @@ decodeBIT = ->
 		@matrix = []
 		for c in tmpc[1].split ""
 			if (c of @farbTab)
-				@matrix.push(c)				
+				@matrix.push c
+
+		@bits = tmpc[1].length * 3 +8
+		@outputParameters()
+
+		@row = Math.floor @matrix.length/@col
+		# Angefangene Zeile
+		if @row != @matrix.length/@col
+			@row +=1
+	false
+decodeL = ->
+	tmpc = @code.split ","
+	col = parseInt tmpc[0]
+	if col > @maxcol
+		alert "Es können nicht #{col} Pixel pro Zeile dargestellt werden. Die maximale Anzahl Pixel beträgt #{@maxcol} "
+	else
+		@col = col
+		@matrix = []
+		@bits = 8
+		tmp2 = tmpc[1].match /\d+\D/g
+		for c in tmp2
+			sz = c.match /\d+/
+			z = parseInt sz
+			if z < 256
+				@bits += 11
+			else
+				@bits += 19
+			f = c.match /\D/ 
+			if (f of @farbTab)
+				for j in [0...z]
+					@matrix.push f
+
+		@outputParameters()
 
 		@row = Math.floor @matrix.length/@col
 		# Angefangene Zeile
@@ -226,16 +313,27 @@ dec = ->
 	el = document.getElementById("selectCode")
 	if el.value == "Bitmap Codierung"
 		@decBIT()
-	else
+	else if el.value == "LZW Codierung"
 		@decLZW()
+	else
+		@decL()
 
 # Clone the Figure
 makeclone = () ->
-	len = @code.length
+	el = document.getElementById("selectCode")
 	tmpc = @code.split ","
-	col = parseInt tmpc[0]
-	str = tmpc[1]+tmpc[1]
-	@code = col.toString()+ "," + str
+	if el.value == "Bitmap Codierung"
+		#len = @code.length
+		col = tmpc[0]
+		str = tmpc[1]+tmpc[1]
+	else if el.value == "LZW Codierung"
+		col = tmpc.shift()
+		#copy = tmpc[..]
+		tmpc=tmpc.concat tmpc
+		str = tmpc.join ","
+	else
+		alert "not implemented"
+	@code = col+ "," + str
 	@decode()
 	@buildFromCode()
 	false
@@ -261,7 +359,7 @@ addcolumn = () ->
 		for y in [0...@row]
 			for x in [0...@col]
 				arr[y*(@col+1)+x] = @matrix[y*@col+x]
-			arr[y*(@col+1)+@col] = 0
+			arr[y*(@col+1)+@col] = @farb
 		@col = @col + 1
 		@matrix = arr
 		@outCodeToForm()
@@ -289,7 +387,11 @@ bfromcode = () ->
 	@element.innerHTML = grid.createGrid().join ''
 	@defgridborder()
 	@updateMat()
-	wout "rowcol","#{@col} x #{@row} |         #{@col} Spalten / #{@row} Zeilen"
+	@outputParameters()
+	false
+
+outParamet = () ->
+	wout "rowcol","#{@col} x #{@row} |         #{@col} Spalten / #{@row} Zeilen | #{@bits} Bits"
 	false
 
 outCode = ->
@@ -342,6 +444,7 @@ grid =
 	size: 28
 	farb: "P"
 	anzFarb: 8
+	bits: 0
 	matrix: []
 	code: ""
 	createGrid: createCodeRows
@@ -350,14 +453,17 @@ grid =
 	updateMat: updateMatrix
 	enLZW: encodeLZW
 	enBIT: encodeBIT
+	enL: encodeL
 	encode: enc
 	evalinp: evaluateInput
 	encode_lzw: enc_lzw
 	decode_lzw: dec_lzw
 	decLZW: decodeLZW
 	decBIT:	decodeBIT
+	decL: decodeL
 	decode: dec
 	outCodeToForm: outCode
+	outputParameters: outParamet
 	addcol: addcolumn
 	mincol: mincolumn
 	clone: makeclone
@@ -457,10 +563,17 @@ bt4.onclick = (e) ->
 el = document.getElementById "selectCode"
 el.onchange = (e) ->
 	elformat = document.getElementById "selectCodeFormat"
+	elLZWTable = document.getElementById "LZW_Table"
 	if el.value == "Bitmap Codierung"
 		elformat.className = "span2 hide"
-	else
+		elLZWTable.className = "hide"
+	else if el.value == "LZW Codierung"
 		elformat.className = "span2"
+		elLZWTable.className = "span5"
+	else
+		elformat.className = "span2 hide"
+		elLZWTable.className = "hide"
+
 	grid.outCodeToForm()
 	false
 

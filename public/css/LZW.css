@@ -22,7 +22,13 @@ pre{
 #selectCodeFormat{
 	float: right;
 }
+#LZW_Table table{
+	margin-left: 0px;
+}
 
+#LZW_Table{
+	margin-left: 0px;
+}
 
 #codeout{
 	height: 250px;
