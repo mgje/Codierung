@@ -6,7 +6,6 @@ können direkt unter folgendem Link betrachtet werden.
 
 [Demonstration der Experimente](http://mgje.github.io/Codierung/)
 
-
 Installation
 ============
 - Archiv herunterladen (zip)
@@ -31,7 +30,7 @@ CoffeeScript ermöglicht es kompakte und übersichtliche Programme zu erstellen.
 Weitere Informationen zum Arbeiten mit CoffeeScript finden sich unter:
 [http://coffeescript.org/](http://coffeescript.org/)
 
-Bitte melden Sie mögliche Weiterentwicklungen oder Wünsche. 
+Bitte melden Sie mögliche Weiterentwicklungen oder Wünsche an [Martin Guggisberg](https://github.com/mgje)
 
 
 
