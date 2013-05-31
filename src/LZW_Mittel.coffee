@@ -383,8 +383,14 @@ evaluateInput = (form) ->
 		zm.push parseInt inp[0]
 		zm.push inp[1]
 		@code = zm.join ","
-	else
+	else if el.value == "LZW Codierung"  
 		@code = inp.join ","
+	else if el.value == "Lauflängen Codierung"
+		zm.push parseInt inp[0]
+		zm.push inp[1]
+		@code = zm.join ","
+	else
+		alert "not Implemented"
 	
 	@decode()
 	@buildFromCode()
@@ -484,9 +490,9 @@ grid.farbTab =
 	"P" : "hellrosa"
 	"N" : "braun"
 	"B" : "blau"
-	"G" : "gelb"
+	"Y" : "gelb"
 	"S" : "schwarz"
-	"U" : "gruen"
+	"G" : "gruen"
 
 grid.farbCode =
 	0 : "W"
@@ -494,9 +500,9 @@ grid.farbCode =
 	2 : "P"
 	3 :	"N"
 	4 :	"B"
-	5 : "G"
+	5 : "Y"
 	6 : "S"
-	7 : "U"
+	7 : "G"
 	
 grid.farbNr =
 	"W" : 0
@@ -504,9 +510,9 @@ grid.farbNr =
 	"P" : 2
 	"N" : 3
 	"B" : 4
-	"G" : 5
+	"Y" : 5
 	"S" : 6
-	"U"	: 7
+	"G"	: 7
 
 grid.element = document.getElementById "code"
 grid.element.innerHTML= grid.createGrid().join ""
