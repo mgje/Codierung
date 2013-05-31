@@ -6,7 +6,6 @@ Release V 1.3 (1 Jun 2013)
 Added LZW Example for 8-Color Images (3Bit)
 
 Tested for Chrome, Safari, IE9, Firefox and IOS (IPad 3)
-
 with the synchronized interactive testing environment 
 ghostlab from vanamco.com
 
