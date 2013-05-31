@@ -374,7 +374,7 @@
         f = c.match(/\D/);
         if (f in this.farbTab) {
           for (j = _j = 0; 0 <= z ? _j < z : _j > z; j = 0 <= z ? ++_j : --_j) {
-            this.matrix.push(f);
+            this.matrix.push(f[0]);
           }
         }
       }
@@ -405,7 +405,7 @@
 
     el = document.getElementById("selectCode");
     tmpc = this.code.split(",");
-    if (el.value === "Bitmap Codierung") {
+    if (el.value === "Bitmap Codierung" || el.value === "Lauflängen Codierung") {
       col = tmpc[0];
       str = tmpc[1] + tmpc[1];
     } else if (el.value === "LZW Codierung") {
@@ -440,17 +440,25 @@
   };
 
   addcolumn = function() {
-    var arr, x, y, _i, _j, _ref, _ref1;
+    var arr, tmp, x, y, _i, _j, _k, _ref, _ref1, _ref2;
 
     if (this.col < this.maxcol) {
       arr = [];
       arr.length = (this.col + 1) * this.row;
-      for (y = _i = 0, _ref = this.row; 0 <= _ref ? _i < _ref : _i > _ref; y = 0 <= _ref ? ++_i : --_i) {
+      for (y = _i = 0, _ref = this.row - 1; 0 <= _ref ? _i < _ref : _i > _ref; y = 0 <= _ref ? ++_i : --_i) {
         for (x = _j = 0, _ref1 = this.col; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; x = 0 <= _ref1 ? ++_j : --_j) {
           arr[y * (this.col + 1) + x] = this.matrix[y * this.col + x];
         }
         arr[y * (this.col + 1) + this.col] = this.farb;
       }
+      for (x = _k = 0, _ref2 = this.col; 0 <= _ref2 ? _k < _ref2 : _k > _ref2; x = 0 <= _ref2 ? ++_k : --_k) {
+        tmp = this.matrix[(this.row - 1) * this.col + x];
+        if (tmp === void 0) {
+          tmp = this.farb;
+        }
+        arr[(this.row - 1) * (this.col + 1) + x] = tmp;
+      }
+      arr[(this.row - 1) * (this.col + 1) + this.col] = this.farb;
       this.col = this.col + 1;
       this.matrix = arr;
       this.outCodeToForm();

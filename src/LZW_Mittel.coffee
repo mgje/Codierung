@@ -299,7 +299,7 @@ decodeL = ->
 			f = c.match /\D/ 
 			if (f of @farbTab)
 				for j in [0...z]
-					@matrix.push f
+					@matrix.push f[0]
 
 		@outputParameters()
 
@@ -322,7 +322,7 @@ dec = ->
 makeclone = () ->
 	el = document.getElementById("selectCode")
 	tmpc = @code.split ","
-	if el.value == "Bitmap Codierung"
+	if el.value == "Bitmap Codierung" or el.value == "Lauflängen Codierung" 
 		#len = @code.length
 		col = tmpc[0]
 		str = tmpc[1]+tmpc[1]
@@ -356,10 +356,18 @@ addcolumn = () ->
 	if @col < @maxcol
 		arr = []
 		arr.length = (@col+1)*@row
-		for y in [0...@row]
+		for y in [0...@row-1]
 			for x in [0...@col]
 				arr[y*(@col+1)+x] = @matrix[y*@col+x]
 			arr[y*(@col+1)+@col] = @farb
+		# Danger last line could be partital filled
+		# Fill up last line
+		for x in [0...@col]
+			tmp = @matrix[(@row-1)*@col+x]
+			if tmp == undefined
+				tmp = @farb
+			arr[(@row-1)*(@col+1)+x] = tmp
+		arr[(@row-1)*(@col+1)+@col] = @farb
 		@col = @col + 1
 		@matrix = arr
 		@outCodeToForm()
