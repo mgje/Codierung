@@ -1,12 +1,10 @@
-Codierung / Decodierung
-=======================
+Codierung / Decodierung V 1.3
+=============================
 
-Die interaktive Experimente zur Huffman-Codierung von Texten und 
-der Lauflängen Codierung von Bildern können direkt unter dem folgenden
-Link betrachtet werden.
+Interaktive Beispiele zur Huffman-Codierung, LZW und Lauflängen Codierung
+können direkt unter folgendem Link betrachtet werden.
 
 [Demonstration der Experimente](http://mgje.github.io/Codierung/)
-
 
 
 Installation
@@ -33,7 +31,7 @@ CoffeeScript ermöglicht es kompakte und übersichtliche Programme zu erstellen.
 Weitere Informationen zum Arbeiten mit CoffeeScript finden sich unter:
 [http://coffeescript.org/](http://coffeescript.org/)
 
-Mögliche Weiterentwicklung:
+Bitte melden Sie mögliche Weiterentwicklungen oder Wünsche. 
 
-- LZW Codierung
+
 
