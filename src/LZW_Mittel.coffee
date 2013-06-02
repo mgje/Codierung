@@ -110,6 +110,14 @@ createCodeRows = () ->
 		#{createCodeBlock(j,@col-1).join ""} 
 		</div>
 		"""
+addinnerEvents = ->
+	for y in [0...@row]
+		for x in [0...@col]
+			id = y*@col+x
+			e = document.getElementById id
+			e.addEventListener "mousedown",handleronChange,false
+			false
+
 defineStyle = () ->
 	@element.style.width = "#{@col*@size}px"
 	@element.style.height= "#{@row*@size}px"
@@ -118,7 +126,6 @@ updateCell = (i,s) ->
 	el = document.getElementById i
 	inp = el.getElementsByClassName("numberInput")[0]
 	inp.value = s
-
 
 createRandomMatrix = ->
 	for y in [0...@row]
@@ -141,7 +148,6 @@ createRowCodeTable = ->
 	keys =[]
 	for k of grid.dict
 		keys.push k
-
 	keys.sort()
 	for key in keys
 		"""
@@ -402,6 +408,7 @@ bfromcode = () ->
 	@defgridborder()
 	@updateMat()
 	@outputParameters()
+	@registerEvents()
 	false
 
 outParamet = () ->
@@ -414,7 +421,7 @@ outCode = ->
 	# wout "rle_code",@code
 
 #Event Handler
-handleronChange = (e) ->
+window.handleronChange = (e) ->
 	el = e.target
 	st = el.className
 	if st == "smallBox cell"
@@ -424,6 +431,7 @@ handleronChange = (e) ->
 		id = parseInt el.parentElement.id
 	grid.matrix[id] = grid.farb
 	el.className = "innerBox #{grid.farbTab[grid.farb]}"
+	e.stopPropagation()
 	false
 
 selectFarb = (i) ->
@@ -450,7 +458,6 @@ handlerColorChage = (e) ->
 		selectFarb nr
 		grid.farb = grid.farbCode[nr]
 
-
 grid = 
 	row: 20
 	col: 22
@@ -465,6 +472,7 @@ grid =
 	defgridborder: defineStyle
 	createMat: createRandomMatrix
 	updateMat: updateMatrix
+	registerEvents: addinnerEvents
 	enLZW: encodeLZW
 	enBIT: encodeBIT
 	enL: encodeL
@@ -520,8 +528,7 @@ grid.defgridborder()
 selectFarb grid.farb
 
 
-
-grid.element.addEventListener "click",handleronChange,false
+#grid.element.addEventListener "mousedown",handleronChange,false
 #Random Start
 #grid.createMat()
 #grid.updateMat()
@@ -529,7 +536,6 @@ grid.element.addEventListener "click",handleronChange,false
 
 # Start with Mario
 grid.evalinp document.getElementById "rle_code"
-
 
 btf = document.getElementById "selectColor"
 btf.addEventListener "click",handlerColorChage,false
