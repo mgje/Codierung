@@ -32,5 +32,10 @@ Weitere Informationen zum Arbeiten mit CoffeeScript finden sich unter:
 
 Bitte melden Sie mögliche Weiterentwicklungen oder Wünsche an [Martin Guggisberg](https://github.com/mgje)
 
+ToDo:
+1) Error Neue Knacknuss bei Firefox
+2) es sollen nur Buchstaben aus dem Alphabet erlaubt sein.
+
+
 
 
