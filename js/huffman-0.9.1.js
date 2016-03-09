@@ -147,7 +147,7 @@ Huffman.Tree.Node.prototype.isLeaf = function() {
 
 Huffman.Tree.Node.prototype.encode = function() {
     //return in Array
-    return this.value ? [this.value] : [this.left.encode(), this.right.encode()]
+    return this.value ? this.value : [this.left.encode(), this.right.encode()]
 };
 var __hasProp = Object.prototype.hasOwnProperty;
 Huffman.TreeBuilder = function(a) {

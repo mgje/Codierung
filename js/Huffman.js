@@ -229,6 +229,7 @@
     this.encbin = this.huffman.stringToBitString(this.enctxt);
     this.encHTMLbin = this.genEncHTMLbin(this.encbin);
     this.treeEncoded = this.huffman.encodeTree();
+    this.treeEncoded = typeof this.treeEncoded !== 'string' ? this.treeEncoded : [this.treeEncoded];
     this.genTree();
     return false;
   };
