@@ -166,7 +166,7 @@
   };
 
   gHTMLbin = function(tbin) {
-    var b, c, cl, e, f, g, h, i, pos, s, _i;
+    var b, c, cl, e, f, g, h, i, pos, s, _i,_j;
 
     i = "<div class='Hcode even' rel='tooltip' data-placement='top' title=' " + this.txt[0] + " '>";
     b = this.huffman.root;
@@ -182,6 +182,16 @@
       }
       i += h;
       b = b[c];
+      //Spezialfall nur 1 Element 
+      if ( b === null){
+        cl = "Hcode even";
+        for (_j = 1; _j < e; _j++){
+          i += "</div><div class='" + cl + "' rel='tooltip' data-placement='top' title=' " + this.txt[_j] + " '>0";
+        }
+        i += "</div>";
+        return i
+      }
+
       if (b.isLeaf()) {
         pos += 1;
         if (pos % 2 === 0) {
