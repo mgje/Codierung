@@ -48,48 +48,43 @@ buildTree = ->
 		[d.y, d.x]
 
 	vis = d3.select("#chart").append("svg")
-	    .attr("width", w)
-	    .attr("height", h)
-	    .append("g")
-	    .attr("transform", "translate(30, 10)")
+		.attr("width", w)
+		.attr("height", h)
+		.append("g")
+		.attr("transform", "translate(30, 10)")
 
 	nodes = tree.nodes json
 
 	link = vis.selectAll("path.link")
-	      .data(tree.links(nodes))
-	      .enter().append("path")
-	      .attr("class", "link")
-	      .attr("d", diagonal)
+		.data(tree.links(nodes))
+		.enter().append("path")
+		.attr("class", "link")
+		.attr("d", diagonal)
 
 	node = vis.selectAll("g.node")
-	      .data(nodes)
-	       .enter().append("g")
-	      .attr("class", "node")
-	      .attr("transform", (d) ->
-	      	"translate (#{d.y},#{d.x})"
-	      )
+		.data(nodes)
+		.enter().append("g")
+		.attr("class", "node")
+		.attr("transform", (d) -> "translate (#{d.y},#{d.x})")
 
 	node.append("circle")
-	    .attr("r", 7.4)
+		.attr("r", 7.4)
 	  
 	node.append("text")
-	      .attr("dx",-4)
-	      .attr("dy", 5)
-	      .attr("text-anchor", "start")
-	      .text( (d) ->
-	      	if d.name[0] != "H"
-	      		d.name[0]
-	      )
+		.attr("dx",-4)
+		.attr("dy", 5)
+		.attr("text-anchor", "start")
+		.text( (d) -> if d.name[0] != "H"
+				d.name[0])
 	node.append("text")
-	      .attr("dx", 11)
-	      .attr("dy", 5)
-	      .attr("text-anchor", "start")
-	      .text( (d) ->
-	      	if d.name[1]==":"
-	      		d.name[2]
-	      	else
-	      		""
-	      )
+		.attr("dx", 11)
+		.attr("dy", 5)
+		.attr("text-anchor", "start")
+		.text( (d) -> if d.name[1]==":"
+			d.name[2]
+		else
+			""
+		)
 #  End Tree
 
 # Behaviour Form Change
@@ -259,14 +254,14 @@ document.forms[0].onkeypress = (e) ->
 # Click Encode
 bt = document.forms[0].button
 bt.onclick = (e) ->
- 	huff.setInput e.target.form[0]	
- 	false
+	huff.setInput e.target.form[0]	
+	false
 
 # Click Decode
 bt = document.forms[1].button
 bt.onclick = (e) ->
- 	huff.decode()	
- 	false
+	huff.decode()	
+	false
 
 # Click Encode
 # bt2 = document.forms[1].button

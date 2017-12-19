@@ -252,32 +252,32 @@ document.forms[0].onkeypress = (e) ->
 # Click Decode
 bt = document.getElementById "btn_decode"
 bt.onclick = (e) ->
- 	grid.evalinp document.getElementById "rle_code"
- 	false
+	grid.evalinp document.getElementById "rle_code"
+	false
 
 # Click Encode
 bt2 = document.getElementById "btn_encode"
 bt2.onclick = (e) ->
- 	grid.outCodeToForm()
- 	false
+	grid.outCodeToForm()
+	false
 
 # Plus Spalte
 bt3 = document.getElementById "btn_addcol"
 bt3.onclick = (e) ->
- 	grid.addcol()
- 	false
+	grid.addcol()
+	false
 
 # Plus Spalte
 bt4 = document.getElementById "btn_mincol"
 bt4.onclick = (e) ->
- 	grid.mincol()
- 	false
+	grid.mincol()
+	false
 
 # Klonen
 bt4 = document.getElementById "btn_clone"
 bt4.onclick = (e) ->
- 	grid.clone()
- 	false 	
+	grid.clone()
+	false 	
 
 # Change Mode
 el = document.getElementById("selectCode")

@@ -1,86 +1,4 @@
-# LZW-compress a string
-enc_lzw = (s) ->
-	@dict = {}
-	data = (s + "").split ""
-	out = []
-	outchar = []
-	phrase = data[0]
-	code = 8
-	for i in [1...data.length]
-		currChar=data[i]
-		if @dict[phrase + currChar] != undefined 
-			phrase += currChar
-		else
-			if phrase.length>1 then  out.push @dict[phrase] else out.push 
-			@farbNr[phrase]
-			@dict[phrase + currChar] = code
-			code++
-			phrase=currChar
-	# Anzahl Code Elemente
 
-	@anzCode = code
-	if phrase.length > 1 then out.push @dict[phrase] else out.push @farbNr[phrase]
-	
-	# calc Code Length
-	bits = 8
-	for c in out
-		if c < 256
-			bits += 8
-		else if bits < 65536
-			bits += 16
-		else
-			bits += 24
-	@bits = bits
-	@outputParameters()
-
-	elformat = document.getElementById("selectCodeFormat")
-	if elformat.value == "Zeichen"
-		for i in [0...out.length]
-			outchar[i] = String.fromCharCode out[i]+97
-		outchar.join ""
-	else if elformat.value == "Zahlen Code"
-		out.join ","
-	else
-		for i in [0...out.length]
-			outchar[i] = out[i].toString(2)
-		outchar.join ","
- 
-# Decompress an LZW-encoded string
-dec_lzw = (s) ->
-	dict = {}
-	data = (s + "").split ","
-	currChar = @farbCode[parseInt data[0]]
-	oldPhrase = currChar
-	out = [currChar]
-	code = 8
-
-	for i in [1...data.length]
-		currCode = data[i]
-		if currCode < 8
-			phrase = @farbCode[parseInt currCode]
-		else
-			if dict[currCode] then phrase=dict[currCode] else phrase = oldPhrase + currChar
-		
-		out.push phrase
-		currChar = phrase.charAt 0
-		dict[code] = oldPhrase + currChar
-		code++
-		oldPhrase = phrase
-	
-	# calc Code Length
-	bits = 8
-	for s in data
-		c = parseInt s
-		if c < 256
-			bits += 8
-		else if bits < 65536
-			bits += 16
-		else 
-			bits += 24
-	@bits = bits
-	@outputParameters()
-
-	out.join ""
 
 #DOM Help Functions
 wout = (eid,output)->
@@ -179,13 +97,7 @@ createCodeTable = ->
 	</table>	
 	"""
 
-encodeLZW = ->
-	@code = @col.toString()+","
-	@code += @encode_lzw @matrix.join ""
-	clearAllChilds "LZW_Table"
-	el = document.getElementById "LZW_Table"
-	el.innerHTML = createCodeTable()	
-	@code
+
 
 encodeBIT = ->
 	# Bits berechnen
@@ -227,43 +139,9 @@ enc = ->
 	el = document.getElementById("selectCode")
 	if el.value == "Bitmap Codierung"
 		@enBIT()
-	else if el.value == "LZW Codierung"
-		@enLZW()
 	else
 		@enL()
 
-decodeLZW = ->
-	elformat = document.getElementById "selectCodeFormat"
-	tmpc = @code.split "," 
-	if elformat.value == "Zahlen Code" 
-		col = parseInt tmpc.shift()
-		tmp = @decode_lzw tmpc.join ","
-	else if elformat.value == "Binär Code"
-		col = parseInt tmpc.shift()
-		tmpc2 = []
-		for x in tmpc
-			tmpc2.push parseInt x,2
-		tmp = @decode_lzw tmpc2.join ","
-	else
-		alert "not Implemented"
-		col = 10000
-		# col = parseInt tmpc[0]
-		# tmp = @decode_lzw tmpc[1]
-	if col > @maxcol
-		alert "Es können nicht #{col} Pixel pro Zeile dargestellt werden. Die maximale Anzahl Pixel beträgt #{@maxcol} "
-	else
-		@col = col
-		@matrix = []
-		# Code in der Form "PPPNNGS"
-		for c in tmp.split ""
-			if (c of @farbTab)
-				@matrix.push c
-
-		@row = Math.floor @matrix.length/@col
-		# Angefangene Zeile
-		if @row != 1.0*@matrix.length/@col
-			@row +=1
-	false
 
 decodeBIT = ->
 	tmpc = @code.split ","
@@ -285,6 +163,7 @@ decodeBIT = ->
 		if @row != @matrix.length/@col
 			@row +=1
 	false
+
 decodeL = ->
 	tmpc = @code.split ","
 	col = parseInt tmpc[0]
@@ -319,8 +198,6 @@ dec = ->
 	el = document.getElementById("selectCode")
 	if el.value == "Bitmap Codierung"
 		@decBIT()
-	else if el.value == "LZW Codierung"
-		@decLZW()
 	else
 		@decL()
 
@@ -389,8 +266,6 @@ evaluateInput = (form) ->
 		zm.push parseInt inp[0]
 		zm.push inp[1]
 		@code = zm.join ","
-	else if el.value == "LZW Codierung"  
-		@code = inp.join ","
 	else if el.value == "Lauflängen Codierung"
 		zm.push parseInt inp[0]
 		zm.push inp[1]
@@ -463,8 +338,8 @@ grid =
 	col: 22
 	maxcol: 22
 	size: 28
-	farb: "P"
-	anzFarb: 8
+	farb: "S"
+	anzFarb: 2
 	bits: 0
 	matrix: []
 	code: ""
@@ -473,14 +348,10 @@ grid =
 	createMat: createRandomMatrix
 	updateMat: updateMatrix
 	registerEvents: addinnerEvents
-	enLZW: encodeLZW
 	enBIT: encodeBIT
 	enL: encodeL
 	encode: enc
 	evalinp: evaluateInput
-	encode_lzw: enc_lzw
-	decode_lzw: dec_lzw
-	decLZW: decodeLZW
 	decBIT:	decodeBIT
 	decL: decodeL
 	decode: dec
@@ -494,33 +365,16 @@ grid =
 
 grid.farbTab =
 	"W" : "weiss"
-	"R" : "rot"
-	"P" : "hellrosa"
-	"N" : "braun"
-	"B" : "blau"
-	"Y" : "gelb"
 	"S" : "schwarz"
-	"G" : "gruen"
 
 grid.farbCode =
 	0 : "W"
-	1 :	"R"
-	2 : "P"
-	3 :	"N"
-	4 :	"B"
-	5 : "Y"
 	6 : "S"
-	7 : "G"
 	
 grid.farbNr =
 	"W" : 0
-	"R" : 1
-	"P" : 2
-	"N" : 3
-	"B" : 4
-	"Y" : 5
 	"S" : 6
-	"G"	: 7
+
 
 grid.element = document.getElementById "code"
 grid.element.innerHTML= grid.createGrid().join ""
