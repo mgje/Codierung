@@ -110,10 +110,6 @@ Huffman.Tree.prototype.generateLeafCache = function(a, b) {
     a = a || this.root;
     b = b || "";
     if (a.isLeaf()) {
-        // Spezialfall!
-        if (a === this.root){
-            b = "0";
-        }
         return (this.leafCache[a.value] = b)
     } else {
         this.generateLeafCache(a.left, b + "0");
@@ -144,9 +140,7 @@ Huffman.Tree.Node = function() {
 Huffman.Tree.Node.prototype.isLeaf = function() {
     return (this.left === this.right) && (this.right === null)
 };
-
 Huffman.Tree.Node.prototype.encode = function() {
-    //return in Array
     return this.value ? this.value : [this.left.encode(), this.right.encode()]
 };
 var __hasProp = Object.prototype.hasOwnProperty;
