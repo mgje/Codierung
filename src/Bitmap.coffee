@@ -101,23 +101,38 @@ createCodeTable = ->
 
 encodeBIT = ->
 	# Bits berechnen
-	@bits = @matrix.length * 3 +8
+	@bits = @matrix.length 
 	@outputParameters()
 	@code = @col.toString()
 	s = ""
+	count = 0
 	for pixel in @matrix
+		if count % @col == 0
+			s += "\n"
 		s += pixel
+		count +=1
 	@code +=","+s
 
 encodeL = ->
-	@bits = 8
+	@bits = 0
 	@code = @col.toString()
 	s = ""
 	farbe = @matrix[0]
 	z = 0
+	count = 0
 	for pixel in @matrix
 		if pixel == farbe
-			z = z+1
+			z += 1
+			if count % @col == 0 && z > 1
+				z -=1
+				s+=z.toString()+farbe
+				s+="\n"
+				if z < 256
+					@bits += 11
+				else
+					@bits += 19
+				z = 1
+
 		else
 			s+=z.toString()+farbe
 			if z < 256
@@ -126,13 +141,16 @@ encodeL = ->
 				@bits += 19
 			z = 1
 			farbe = pixel
+		count +=1
+	
+	#letzte Zeile
 	s+=z.toString()+farbe
 	if z < 256
 		@bits += 11
 	else
 		@bits += 19
 	@outputParameters()
-	@code +=","+s
+	@code +=",\n"+s
 
 # Encoding
 enc = ->
@@ -155,7 +173,7 @@ decodeBIT = ->
 			if (c of @farbTab)
 				@matrix.push c
 
-		@bits = tmpc[1].length * 3 +8
+		@bits = tmpc[1].length+8
 		@outputParameters()
 
 		@row = Math.floor @matrix.length/@col
@@ -178,9 +196,9 @@ decodeL = ->
 			sz = c.match /\d+/
 			z = parseInt sz
 			if z < 256
-				@bits += 11
+				@bits += 9
 			else
-				@bits += 19
+				@bits += 17
 			f = c.match /\D/ 
 			if (f of @farbTab)
 				for j in [0...z]
@@ -209,11 +227,6 @@ makeclone = () ->
 		#len = @code.length
 		col = tmpc[0]
 		str = tmpc[1]+tmpc[1]
-	else if el.value == "LZW Codierung"
-		col = tmpc.shift()
-		#copy = tmpc[..]
-		tmpc=tmpc.concat tmpc
-		str = tmpc.join ","
 	else
 		alert "not implemented"
 	@code = col+ "," + str
@@ -369,11 +382,11 @@ grid.farbTab =
 
 grid.farbCode =
 	0 : "W"
-	6 : "S"
+	1 : "S"
 	
 grid.farbNr =
 	"W" : 0
-	"S" : 6
+	"S" : 1
 
 
 grid.element = document.getElementById "code"
@@ -400,9 +413,9 @@ btf.addEventListener "click",handlerColorChage,false
 document.forms[0].onkeypress = (e) ->
 	if !e
 		e = window.event
-	if e.keyCode ==13
-		grid.evalinp e.target
-		false
+	#if e.keyCode ==13
+	#	grid.evalinp e.target
+	#	false
 # Click Decode
 bt = document.getElementById "btn_decode"
 bt.onclick = (e) ->
@@ -451,9 +464,9 @@ el.onchange = (e) ->
 	grid.outCodeToForm()
 	false
 
-elformat = document.getElementById "selectCodeFormat"
-elformat.onchange = (e) ->
-	grid.outCodeToForm()
-	false
+#elformat = document.getElementById "selectCodeFormat"
+#elformat.onchange = (e) ->
+#	grid.outCodeToForm()
+#	false
 
 
